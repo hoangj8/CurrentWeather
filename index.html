@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Today's Weather</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			//get the user's country, city and time zone by callihng the extreme-ip-lookup site
+			fetch('http://ip-api.com/json')
+				.then( res => res.json())
+				.then(response => {
+				    //declaring al our variables
+					var country,city,timezone;
+					//we'll be using weather data from OpenWeather.org - but to use it we need to provide an API key (free for signing up)
+					const apiKey="ee4edea524d1e277c9414710809579a8"
+
+				    country=response.countryCode;
+				    city=response.city;
+				    timezone=response.timezone;
+				    //console.log(country,city,timezone);
+				    var inputVal=city + "," + country
+				    const url = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${apiKey}&units=metric`;
+				    //data is asynchronous meaning the only to access it is via a callback function
+				    weatherDisplay(url,timezone);
+				 })
+				 .catch((data, status) => {
+				    console.log('Request failed');
+				});
+			
+			//callback function for getting data from API and using it to construct our display
+			function weatherDisplay(url,timezone){
+				fetch(url)
+				.then(response => response.json())
+				.then(data =>{
+					//console.log(data);
+					var d=new Date();
+					var h = d.getHours();
+					var m = d.getMinutes();
+					var period;
+					
+					//customized welcome message based on time of day
+					if(h>4 && h<12){
+						$("h1").text("Good Morning");
+					}
+					else if(h>11 && h<18){
+						$("h1").text("Good Afternoon");
+					}
+					else{
+						 $("h1").text("Good Evening");
+						
+					}
+
+					if (h==0){
+						h=12;
+						period="am";
+					}
+					else if (h<=11){
+						period="am";
+					}
+					else if (h==12){
+						period="pm";
+					}
+					else{
+						period="pm";
+						h=h%12;
+					}
+				})
+				.catch(() => {
+
+				});
+			}
+
+		});
+	</script>
+
+</head>
+
+<body>
+<h1 id="greeting"></h1>
+<h2 id="weather status">Sunny</h2>
+
+
+</body>
+
+
+</html>
