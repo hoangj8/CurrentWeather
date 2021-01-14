@@ -8,30 +8,31 @@
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
-			//get the user's country, city and time zone by callihng the extreme-ip-lookup site
-			fetch('https://ip-api.com/json')
+			//get the user's country, city and time zone by calling api from ipwhois
+			const ipURL=`https://ipwhois.app/json/`
+			fetch(ipURL)
 				.then( res => res.json())
 				.then(response => {
 				    //declaring al our variables
 					var country,city,timezone;
 					//we'll be using weather data from OpenWeather.org - but to use it we need to provide an API key (free for signing up)
-					const apiKey="ee4edea524d1e277c9414710809579a8"
+					const weatherKey="ee4edea524d1e277c9414710809579a8"
 
-				    country=response.countryCode;
+				    country=response.country_code;
 				    city=response.city;
 				    timezone=response.timezone;
 				    //console.log(country,city,timezone);
 				    var inputVal=city + "," + country
-				    const url = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${apiKey}&units=metric`;
+				    const weatherurl = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${weatherKey}&units=metric`;
 				    //data is asynchronous meaning the only to access it is via a callback function
-				    weatherDisplay(url,timezone);
+				    weatherDisplay(weatherurl);
 				 })
 				 .catch((data, status) => {
 				    console.log('Request failed');
 				});
 			
 			//callback function for getting data from API and using it to construct our display
-			function weatherDisplay(url,timezone){
+			function weatherDisplay(url){
 				fetch(url)
 				.then(response => response.json())
 				.then(data =>{
