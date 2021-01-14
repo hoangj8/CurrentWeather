@@ -3,9 +3,11 @@
 
 <head>
 	<title>Today's Weather</title>
+	<style>
+		@import url(weather.css);
+	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
-		$(document).ready(function(){
 			//get the user's country, city and time zone by callihng the extreme-ip-lookup site
 			fetch('http://ip-api.com/json')
 				.then( res => res.json())
@@ -38,8 +40,8 @@
 					var h = d.getHours();
 					var m = d.getMinutes();
 					var period;
-					
-					//customized welcome message based on time of day
+					console.log(data);
+					//**customized welcome message based on time of day**//
 					if(h>4 && h<12){
 						$("h1").text("Good Morning");
 					}
@@ -47,8 +49,8 @@
 						$("h1").text("Good Afternoon");
 					}
 					else{
-						 $("h1").text("Good Evening");
-						
+						$("h1").text("Good Evening");
+					    $("body").css({"background-color":"black"});
 					}
 
 					if (h==0){
@@ -65,20 +67,45 @@
 						period="pm";
 						h=h%12;
 					}
+
+					//**temperature display here**//
+					$("h2").text("The current temperature is "+ Math.round(data.main.temp));
+					$("h2").append("&deg;C in " +data.name + ", " + data.sys.country); 
+
+					//**weather display here**//
+					var iconURL= "images/" + data.weather[0].icon + ".svg";
+					// console.log(iconURL);
+					var weatherCard = document.createElement("li");
+					weatherCard.classList.add("weather");
+					weatherCard.innerHTML = `<img class="weatherImage" src=${iconURL} alt=${data.weather[0].description}>`
+					$("#iconlist").append(weatherCard);
+
+					//add more cards depending on conditions
+					if(data.wind.speed > 10)
+					{
+						iconURL="images/windy.svg";
+						var weatherCard = document.createElement("li");
+						weatherCard.classList.add("weather");
+						weatherCard.innerHTML = `<img class="weatherImage" src=${iconURL} alt="Windy">`
+						$("#iconlist").append(weatherCard);
+					}
+
 				})
 				.catch(() => {
-
+					
 				});
 			}
-
-		});
 	</script>
 
 </head>
 
 <body>
 <h1 id="greeting"></h1>
-<h2 id="weather status">Sunny</h2>
+<h2 id="weather status"></h2>
+<div id="weatherconditions">
+	<ul id="iconlist">
+	</ul>
+</div>
 
 
 </body>

@@ -1,0 +1,38 @@
+body{
+	
+	background-color: rgb(104 152 196);
+	color:white;
+}
+h1{
+	font-family: "Microsoft JhengHei UI";
+	background-color: rgb(150 194 235);
+	padding:1em;
+	margin-right: 60%;
+	margin-left:0;
+	border-radius: 0 2em 0.75em 0;
+	text-align: center;
+	font-size:2.5vw;
+}
+h2{
+	font-family:"Microsoft JhengHei UI";
+	text-align: center;
+	margin-top: 3em;
+	font-size: 2vw;
+}
+
+.weather{
+	border:solid gray;
+	background-color: white;
+}
+#iconlist{
+	list-style-type: none;
+	display:flex;
+	justify-content: center;
+	border:solid white;
+
+}
+
+.weatherImage{
+	width:10em;
+}
+
