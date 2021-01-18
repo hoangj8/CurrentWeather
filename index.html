@@ -9,8 +9,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 			//get the user's country, city and time zone by calling api from ipwhois
-			const ipURL=`https://ipwhois.app/json/`
-			fetch(ipURL)
+			const IPURL=`https://ipwhois.app/json/`
+			fetch(IPURL)
 				.then( res => res.json())
 				.then(response => {
 				    //declaring al our variables
@@ -23,9 +23,9 @@
 				    timezone=response.timezone;
 				    //console.log(country,city,timezone);
 				    var inputVal=city + "," + country
-				    const weatherurl = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${weatherKey}&units=metric`;
-				    //data is asynchronous meaning the only to access it is via a callback function
-				    weatherDisplay(weatherurl);
+				    const WEATHERURL = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${weatherKey}&units=metric`;
+				    /*the data retrieved and manipulated in a fetch is asynchronous. It can't be accessed outside the scope of the fetch so we need to call a separate function within in order to manipualte it that way - a callback function*/
+				    weatherDisplay(WEATHERURL);
 				 })
 				 .catch((data, status) => {
 				    console.log('Request failed');
