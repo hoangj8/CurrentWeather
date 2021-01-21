@@ -25,7 +25,11 @@
 				    var inputVal=city + "," + country
 				    const WEATHERURL = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${weatherKey}&units=metric`;
 				    /*the data retrieved and manipulated in a fetch is asynchronous. It can't be accessed outside the scope of the fetch so we need to call a separate function within in order to manipualte it that way - a callback function*/
-				    weatherDisplay(WEATHERURL);
+				    weatherDisplay(WEATHERURL);  
+				    //repeat the weatherDisplay call every 10 minutes
+				    var interval = setInterval(function(){
+				    	weatherDisplay(WEATHERURL);
+				    },1000*60*10);
 				 })
 				 .catch((data, status) => {
 				    console.log('Request failed');
@@ -33,70 +37,87 @@
 			
 			//callback function for getting data from API and using it to construct our display
 			function weatherDisplay(url){
-				fetch(url)
-				.then(response => response.json())
-				.then(data =>{
-					//console.log(data);
-					var d=new Date();
-					var h = d.getHours();
-					var m = d.getMinutes();
-					var period;
-					console.log(data);
-					//**customized welcome message based on time of day**//
-					if(h>4 && h<12){
-						$("h1").text("Good Morning");
-					}
-					else if(h>11 && h<18){
-						$("h1").text("Good Afternoon");
-					}
-					else{
-						$("h1").text("Good Evening");
-					    $("body").css({"background-color":"black"});
-					}
+				//use the 'setInterval' function to periodically fetch and update weather data
+				// var interval=setInterval(function(){
+					fetch(url)
+					.then(response => response.json())
+					.then(data =>{
+						//console.log(data);
+						var d=new Date();
+						var h = d.getHours();
+						var m = d.getMinutes();
+						var period;
+						console.log(data);
+						//**customized welcome message based on time of day**//
+						if(h>4 && h<12){
+							$("h1").text("Good Morning");
+						}
+						else if(h>11 && h<18){
+							$("h1").text("Good Afternoon");
+						}
+						else{
+							$("h1").text("Good Evening");
+						    $("body").css({"background-color":"black"});
+						}
 
-					if (h==0){
-						h=12;
-						period="am";
-					}
-					else if (h<=11){
-						period="am";
-					}
-					else if (h==12){
-						period="pm";
-					}
-					else{
-						period="pm";
-						h=h%12;
-					}
+						// if (h==0){
+						// 	h=12;
+						// 	period="am";
+						// }
+						// else if (h<=11){
+						// 	period="am";
+						// }
+						// else if (h==12){
+						// 	period="pm";
+						// }
+						// else{
+						// 	period="pm";
+						// 	h=h%12;
+						// }
 
-					//**temperature display here**//
-					$("#currenttemp").text("The current temperature is "+ Math.round(data.main.temp));
-					$("#currenttemp").append("&deg;C in " +data.name + ", " + data.sys.country); 
-					const highlowmsg=`High: ${Math.round(data.main.temp_max)}&deg;C Low: ${Math.round(data.main.temp_min)}&deg;C`;
-					$("#highlow").text("High: "+ Math.round(data.main.temp_max)+ "\xB0C\xa0\xa0\xa0\xa0    " +"Low: " + Math.round(data.main.temp_min)+ "\xB0C");
+						//**preventing duplicate cards... check if any weather cards are on the page, if there are, update the image source to reflect current weather**/
 
-					//**weather display here**//
-					var iconURL= "images/" + data.weather[0].icon + ".svg";
-					// console.log(iconURL);
-					var weatherCard = document.createElement("li");
-					weatherCard.classList.add("weather");
-					weatherCard.innerHTML = `<img class="weatherImage" src=${iconURL} alt=${data.weather[0].description}>`
-					$("#iconlist").append(weatherCard);
+						//**temperature display here**//
+						$("#currenttemp").text("The current temperature is "+ Math.round(data.main.temp));
+						$("#currenttemp").append("&deg;C in " +data.name + ", " + data.sys.country); 
+						const highlowmsg=`High: ${Math.round(data.main.temp_max)}&deg;C Low: ${Math.round(data.main.temp_min)}&deg;C`;
+						$("#highlow").text("High: "+ Math.round(data.main.temp_max)+ "\xB0C\xa0\xa0\xa0\xa0    " +"Low: " + Math.round(data.main.temp_min)+ "\xB0C");
 
-					//add more cards depending on conditions
-					if(data.wind.speed > 10)
-					{
-						iconURL="images/windy.svg";
-						var weatherCard = document.createElement("li");
-						weatherCard.classList.add("weather");
-						weatherCard.innerHTML = `<img class="weatherImage" src=${iconURL} alt="Windy">`
-						$("#iconlist").append(weatherCard);
-					}
+						//**weather display here**//
 
-				})
-				.catch(() => {
-					
-				});
+
+						var iconURL= "images/" + data.weather[0].icon + ".svg"; //grab icon of current weather
+						
+						//check to see if weather cards already on page; if so, update the weather card to most current one
+						const listItems = document.querySelectorAll(".weatherImage"); 
+						const listItemsArray=Array.from(listItems);
+						if (listItemsArray.length>0){
+							$("#weather").attr(`src, ${iconURL}`);
+						}
+						else{ //running for the first time so put a new weather card
+							var weatherCard = document.createElement("li");
+							weatherCard.classList.add("weather");
+							weatherCard.innerHTML = `<img class="weatherImage" id="weather" src=${iconURL} alt=${data.weather[0].description}>`
+							$("#iconlist").append(weatherCard);
+						}
+
+						//add more cards depending on conditions
+						if(data.wind.speed > 10)
+						{
+							iconURL="images/windy.svg";
+							var weatherCard = document.createElement("li");
+							weatherCard.classList.add("weather");
+							weatherCard.innerHTML = `<img class="weatherImage" id="wind" src=${iconURL} alt="Windy">`
+							$("#iconlist").append(weatherCard);
+						}
+
+
+
+					})
+					.catch(() => {
+						
+					});
+				// },1000*60*10); //timer of when to update weather data in milliseconds
 			}
 	</script>
 
