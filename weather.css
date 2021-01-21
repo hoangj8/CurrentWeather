@@ -16,23 +16,35 @@ h1{
 h2{
 	font-family:"Microsoft JhengHei UI";
 	text-align: center;
-	margin-top: 3em;
 	font-size: 2vw;
 }
-
 .weather{
 	border:solid gray;
 	background-color: white;
 }
+#weathermessage{
+	width:50%;
+	height: auto;
+	margin:auto;
+	background-color:gray;
+	border:solid white;
+}
+
 #iconlist{
 	list-style-type: none;
 	display:flex;
 	justify-content: center;
-	border:solid white;
-
+	margin-left: 0;
+	padding-left:0;
 }
 
 .weatherImage{
 	width:10em;
 }
 
+#highlow{
+	font-family:"Microsoft JhengHei UI";
+	font-size:1.5vw;
+	text-align:center;
+	align-content: center;
+}

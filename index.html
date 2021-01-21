@@ -7,7 +7,7 @@
 		@import url(weather.css);
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script>
+	<script defer>
 			//get the user's country, city and time zone by calling api from ipwhois
 			const IPURL=`https://ipwhois.app/json/`
 			fetch(IPURL)
@@ -70,8 +70,10 @@
 					}
 
 					//**temperature display here**//
-					$("h2").text("The current temperature is "+ Math.round(data.main.temp));
-					$("h2").append("&deg;C in " +data.name + ", " + data.sys.country); 
+					$("#currenttemp").text("The current temperature is "+ Math.round(data.main.temp));
+					$("#currenttemp").append("&deg;C in " +data.name + ", " + data.sys.country); 
+					const highlowmsg=`High: ${Math.round(data.main.temp_max)}&deg;C Low: ${Math.round(data.main.temp_min)}&deg;C`;
+					$("#highlow").text("High: "+ Math.round(data.main.temp_max)+ "\xB0C\xa0\xa0\xa0\xa0    " +"Low: " + Math.round(data.main.temp_min)+ "\xB0C");
 
 					//**weather display here**//
 					var iconURL= "images/" + data.weather[0].icon + ".svg";
@@ -102,7 +104,10 @@
 
 <body>
 <h1 id="greeting"></h1>
-<h2 id="weather status"></h2>
+<div id="weathermessage">
+	<h2 id="currenttemp"></h2>
+	<h3 id="highlow"></h3>
+</div>
 <div id="weatherconditions">
 	<ul id="iconlist">
 	</ul>
